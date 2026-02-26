@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[SerializeField]
+[System.Serializable]
 public enum WeaponType
 {
 PLASMA,ROCKET,RAIL,RAM

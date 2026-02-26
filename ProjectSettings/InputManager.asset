@@ -1013,3 +1013,4 @@ InputManager:
     type: 0
     axis: 27
     joyNum: 2
+  m_UsePhysicalKeys: 1
