@@ -322,7 +322,7 @@ namespace Assets.Scripts.Input
             float delta_forward = delta_move.y * throttle_acc;
             float delta_right = delta_move.x * strafe_acc;
             Vector3 acc_vec = (forward * delta_forward) + (right * delta_right);
-            if (rb.velocity.sqrMagnitude < sqr_max_vel)
+            if (rb.linearVelocity.sqrMagnitude < sqr_max_vel)
             {
                 rb.AddForce(acc_vec, ForceMode.Acceleration);
             }
