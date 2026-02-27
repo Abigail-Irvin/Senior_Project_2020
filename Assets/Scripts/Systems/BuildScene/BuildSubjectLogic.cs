@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using System;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 [System.Serializable]
 public class WeaponPlacerInfo
 {
@@ -20,10 +21,14 @@ public class WeaponryInfo
     /// </summary>
     public int m_index;
     public GameObject m_prefab;
-    public WeaponryInfo(int index, GameObject obj)
+    public  InputActionReference m_primary;
+    public  InputActionReference m_secondary;
+    public WeaponryInfo(int index, GameObject obj, InputActionReference primary, InputActionReference secondary)
     {
         m_index = index;
         m_prefab = obj;
+        m_primary = primary;
+        m_secondary = secondary;
     }
 }
 
@@ -49,7 +54,6 @@ public class BuildSubjectLogic : MonoBehaviour
     /// Script attached to build ref, stores and maintains static list of all player info to be loaded in game once build is finished.
     /// keeps and maintains list of currently added weaponry and in which locations on the ship weapon array.
     /// </summary>
-    private EventSystemInputManager m_inputManager;
     public Mesh m_defaultMesh;
     public SlotPicker m_pickerRef;
     public List<WeaponPlacerInfo> m_WeaponPlacerInfo = new List<WeaponPlacerInfo>();
@@ -61,17 +65,14 @@ public class BuildSubjectLogic : MonoBehaviour
     public List<GameObject> m_weaponSlots = new List<GameObject>();
     public List<WeaponryInfo> m_placedWeapons = new List<WeaponryInfo>();
     public static List<PlayerInfo> AllPlayerInfo = new List<PlayerInfo>(); // the static list holding all players build info
+
+    public InputActionReference P1_Primary_Fire;
+    public InputActionReference P1_Secondary_Fire;
+    public InputActionReference P2_Primary_Fire;
+    public InputActionReference P2_Secondary_Fire;
     private void Start()
     {
         UpdateBuildText();
-        try
-        {
-            m_inputManager = EventSystem.current.gameObject.GetComponent<EventSystemInputManager>();
-        }
-        catch(Exception)
-        {
-            Debug.LogError("Error, EventSystemInputManager script not found on the current EventSystem, trying attaching one and trying again.");
-        }
     }
     public List<GameObject> GetWeaponSlots()
     {
@@ -93,8 +94,18 @@ public class BuildSubjectLogic : MonoBehaviour
         }
         if(!isInList)
         {
-            WeaponryInfo newWeapon = new WeaponryInfo(slot, prefab);
-            m_placedWeapons.Add(newWeapon);
+            if (m_currentPlayerId == 1)
+            {
+                WeaponryInfo newWeapon = new WeaponryInfo(slot, prefab, P1_Primary_Fire, P1_Secondary_Fire);
+                m_placedWeapons.Add(newWeapon);
+            }
+            else
+            {
+                WeaponryInfo newWeapon = new WeaponryInfo(slot, prefab, P2_Primary_Fire, P2_Secondary_Fire);
+                m_placedWeapons.Add(newWeapon);
+            }
+            
+            
         }
     }
     private void ResetSlots()
@@ -158,11 +169,10 @@ public class BuildSubjectLogic : MonoBehaviour
         PlayerInfo newPlayer = new PlayerInfo(m_currentPlayerId, finalName, m_placedWeapons);
         AllPlayerInfo.Add(newPlayer);
         UpdateBuildText();
-        if (m_currentPlayerId < Input.GetJoystickNames().Length && m_currentPlayerId < 2)
+        if (m_currentPlayerId < 2)
         {
             //Allows to build up to 2 ships, game is hard capped at 2 joysticks though.
             m_currentPlayerId++;
-            m_inputManager.UpdateInputManager();
             ResetSlots();
         }
         else

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class BuildSubjectRotator : MonoBehaviour
 {
@@ -10,30 +11,29 @@ public class BuildSubjectRotator : MonoBehaviour
     private float m_axis_pitch = 0;
     private float m_axis_roll = 0;
     private float m_base_turn_rate = 100;
+    
+    public InputActionReference p1_pitch;
+    public InputActionReference p1_roll;
+    public InputActionReference p1_yaw;
+
+    public InputActionReference p2_pitch;
+    public InputActionReference p2_roll;
+    public InputActionReference p2_yaw;
+
     private void GetInput()
     {
-        int pitchInv = 1;
-        int yawInv = 1;
-        int rollInv = 1;
-        int thrustInv = 1;
         if (BuildSubjectLogic.m_currentPlayerId == 1)
         {
-            //pitchInv = Keybinder.m_P1_PitchInv;
-            //yawInv = Keybinder.m_P1_YawInv;
-            //rollInv = Keybinder.m_P1_RollInv;
-            //thrustInv = Keybinder.m_P1_ThrustInv;
+            m_axis_pitch = p1_pitch.action.ReadValue<float>();
+            m_axis_roll = p1_roll.action.ReadValue<float>();
+            m_axis_yaw = p1_yaw.action.ReadValue<float>();
         }
         else if (BuildSubjectLogic.m_currentPlayerId == 2)
         {
-            //pitchInv = Keybinder.m_P2_PitchInv;
-            //yawInv = Keybinder.m_P2_YawInv;
-            //rollInv = Keybinder.m_P2_RollInv;
-            //thrustInv = Keybinder.m_P2_ThrustInv;
+            m_axis_pitch = p2_pitch.action.ReadValue<float>();
+            m_axis_roll = p2_roll.action.ReadValue<float>();
+            m_axis_yaw = p2_yaw.action.ReadValue<float>();
         }
-        //Input grabber for the spaceship
-        //m_axis_yaw = Input.GetAxis(Keybinder.m_axisDictionary["P" + BuildSubjectLogic.m_currentPlayerId + "_Yaw"]) * yawInv;
-        //m_axis_pitch = Input.GetAxis(Keybinder.m_axisDictionary["P" + BuildSubjectLogic.m_currentPlayerId + "_Pitch"]) * pitchInv;
-        //m_axis_roll = Input.GetAxis(Keybinder.m_axisDictionary["P" + BuildSubjectLogic.m_currentPlayerId + "_Roll"]) * rollInv;
     }
     private void RotationUpdate()
     {

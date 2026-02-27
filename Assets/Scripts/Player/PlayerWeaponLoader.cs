@@ -26,6 +26,8 @@ public class PlayerWeaponLoader : MonoBehaviour
             {
                 Transform idealLocation = m_slotList[weapon.m_index].transform;
                 GameObject newWeapon = Instantiate(weapon.m_prefab, this.transform);
+                newWeapon.GetComponent<Fire>().primary_fire = weapon.m_primary;
+                newWeapon.GetComponent<Fire>().secondary_fire = weapon.m_secondary;
                 newWeapon.transform.localPosition = idealLocation.localPosition;
             }
         }
