@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 [System.Serializable]
 public enum WeaponType
@@ -9,6 +10,8 @@ PLASMA,ROCKET,RAIL,RAM
 }
 public class Fire : MonoBehaviour
 {
+    public InputActionReference primary_fire;
+    public InputActionReference secondary_fire;
     public WeaponType m_weaponType;
     public GameObject m_projectilePrefab;
     public float m_reloadTime = 0.5f;
@@ -82,13 +85,13 @@ public class Fire : MonoBehaviour
         switch (m_weaponType)
         {
             case WeaponType.PLASMA:
-                m_fireAxis = Input.GetAxis(Keybinder.m_axisDictionary["P" + joynum + "_PrimaryFire"]);
+                m_fireAxis = primary_fire.action.ReadValue<float>();
                 break;
             case WeaponType.ROCKET:
-                m_fireAxis = Input.GetAxis(Keybinder.m_axisDictionary["P" + joynum + "_SecondaryFire"]);
+                m_fireAxis = secondary_fire.action.ReadValue<float>();
                 break;
             case WeaponType.RAIL:
-                m_fireAxis = Input.GetAxis(Keybinder.m_axisDictionary["P" + joynum + "_SecondaryFire"]);
+                m_fireAxis = secondary_fire.action.ReadValue<float>();
                 break;
             default:
                 break;

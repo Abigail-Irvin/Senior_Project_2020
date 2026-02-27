@@ -1,10 +1,17 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Animations;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class Movement : MonoBehaviour
 {
+    public InputActionReference pitch;
+    public InputActionReference roll;
+    public InputActionReference yaw;
+    public InputActionReference thrust;
     public Rigidbody m_body;
     public Player m_player_ref;
     public Image m_fillBar;
@@ -61,29 +68,11 @@ public class Movement : MonoBehaviour
     }
     private void GetInput()
     {
-        int pitchInv = 1;
-        int yawInv = 1;
-        int rollInv = 1;
-        int thrustInv = 1;
-        if (m_joy_num == 1)
-        {
-            pitchInv = Keybinder.m_P1_PitchInv;
-            yawInv = Keybinder.m_P1_YawInv;
-            rollInv = Keybinder.m_P1_RollInv;
-            thrustInv = Keybinder.m_P1_ThrustInv;
-        }
-        else if (m_joy_num == 2)
-        {
-            pitchInv = Keybinder.m_P2_PitchInv;
-            yawInv = Keybinder.m_P2_YawInv;
-            rollInv = Keybinder.m_P2_RollInv;
-            thrustInv = Keybinder.m_P2_ThrustInv;
-        }
         //Input grabber for the spaceship
-        m_axis_yaw = Input.GetAxis(Keybinder.m_axisDictionary["P" + m_joy_num + "_Yaw"]) * yawInv;
-        m_axis_pitch = Input.GetAxis(Keybinder.m_axisDictionary["P" + m_joy_num + "_Pitch"]) * pitchInv;
-        m_axis_roll = Input.GetAxis(Keybinder.m_axisDictionary["P" + m_joy_num + "_Roll"]) * rollInv;
-        m_axis_thrust = Input.GetAxis(Keybinder.m_axisDictionary["P" + m_joy_num + "_Thrust"]) * thrustInv;
+        m_axis_yaw = yaw.action.ReadValue<float>();
+        m_axis_pitch = pitch.action.ReadValue<float>();
+        m_axis_roll = roll.action.ReadValue<float>();
+        m_axis_thrust = thrust.action.ReadValue<float>();
     }
 
     private void MovementUpdate()
